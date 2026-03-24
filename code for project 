@@ -1,0 +1,95 @@
+-- Create DB
+CREATE DATABASE IF NOT EXISTS healthcare_db;
+USE healthcare_db;
+
+-- Drop tables (prevents foreign key errors if re-running)
+DROP TABLE IF EXISTS billing;
+DROP TABLE IF EXISTS medical_history;
+DROP TABLE IF EXISTS treatments;
+DROP TABLE IF EXISTS appointments;
+DROP TABLE IF EXISTS patients;
+DROP TABLE IF EXISTS doctors;
+DROP TABLE IF EXISTS users;
+
+-- Doctors
+CREATE TABLE doctors (
+    doctor_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    specialization VARCHAR(100),
+    phone VARCHAR(15),
+    email VARCHAR(100)
+);
+
+-- Patients
+CREATE TABLE patients (
+    patient_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    age INT,
+    gender VARCHAR(10),
+    phone VARCHAR(15),
+    address TEXT
+);
+
+-- Appointments
+CREATE TABLE appointments (
+    appointment_id INT AUTO_INCREMENT PRIMARY KEY,
+    patient_id INT,
+    doctor_id INT,
+    appointment_date DATE,
+    status VARCHAR(50),
+    FOREIGN KEY (patient_id) REFERENCES patients(patient_id),
+    FOREIGN KEY (doctor_id) REFERENCES doctors(doctor_id)
+);
+
+-- Treatments
+CREATE TABLE treatments (
+    treatment_id INT AUTO_INCREMENT PRIMARY KEY,
+    appointment_id INT,
+    diagnosis TEXT,
+    prescription TEXT,
+    treatment_date DATE,
+    FOREIGN KEY (appointment_id) REFERENCES appointments(appointment_id)
+);
+
+-- Medical History
+CREATE TABLE medical_history (
+    history_id INT AUTO_INCREMENT PRIMARY KEY,
+    patient_id INT,
+    condition_details TEXT,
+    recorded_date DATE,
+    FOREIGN KEY (patient_id) REFERENCES patients(patient_id)
+);
+
+-- Billing
+CREATE TABLE billing (
+    bill_id INT AUTO_INCREMENT PRIMARY KEY,
+    patient_id INT,
+    appointment_id INT,
+    total_amount DECIMAL(10,2),
+    payment_status VARCHAR(50),
+    payment_date DATE,
+    FOREIGN KEY (patient_id) REFERENCES patients(patient_id),
+    FOREIGN KEY (appointment_id) REFERENCES appointments(appointment_id)
+);
+
+-- Users
+CREATE TABLE users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50),
+    password VARCHAR(100),
+    role VARCHAR(50)
+);
+
+-- Insert Data
+INSERT INTO doctors (name, specialization, phone, email)
+VALUES ('Dr. Ravi', 'Cardiologist', '9876543210', 'ravi@gmail.com');
+
+INSERT INTO patients (name, age, gender, phone, address)
+VALUES ('Anu', 22, 'Female', '9123456780', 'Chennai');
+
+INSERT INTO appointments (patient_id, doctor_id, appointment_date, status)
+VALUES (1, 1, '2026-03-20', 'Scheduled');
+SELECT a.appointment_id, p.name AS patient, d.name AS doctor, a.appointment_date
+FROM appointments a
+JOIN patients p ON a.patient_id = p.patient_id
+JOIN doctors d ON a.doctor_id = d.doctor_id;
