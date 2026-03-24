@@ -1,15 +1,4 @@
--- Create DB
-CREATE DATABASE IF NOT EXISTS healthcare_db;
-USE healthcare_db;
 
--- Drop tables (prevents foreign key errors if re-running)
-DROP TABLE IF EXISTS billing;
-DROP TABLE IF EXISTS medical_history;
-DROP TABLE IF EXISTS treatments;
-DROP TABLE IF EXISTS appointments;
-DROP TABLE IF EXISTS patients;
-DROP TABLE IF EXISTS doctors;
-DROP TABLE IF EXISTS users;
 
 -- Doctors
 CREATE TABLE doctors (
@@ -89,7 +78,7 @@ VALUES ('Anu', 22, 'Female', '9123456780', 'Chennai');
 
 INSERT INTO appointments (patient_id, doctor_id, appointment_date, status)
 VALUES (1, 1, '2026-03-20', 'Scheduled');
-SELECT a.appointment_id, p.name AS patient, d.name AS doctor, a.appointment_date
-FROM appointments a
-JOIN patients p ON a.patient_id = p.patient_id
-JOIN doctors d ON a.doctor_id = d.doctor_id;
+
+select*from doctors;
+select*from patients;
+select*from appointments;
